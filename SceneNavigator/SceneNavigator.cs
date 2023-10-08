@@ -1,5 +1,5 @@
 /* 
-Author: pencils
+Author: pencils (https://stroypencils.tistory.com)
 License: None
 
 Scene Navigator provides easy mobility by registering Scene that Unity uses frequently. 
