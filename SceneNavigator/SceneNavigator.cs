@@ -1,3 +1,23 @@
+/* 
+Author: pencils
+License: None
+
+Scene Navigator provides easy mobility by registering Scene that Unity uses frequently. 
+
+**Requirements**: newtonsoft.json must be added to the project before it can be used. 
+You can download it from the Nugget Package Manager in visual study or from the project. 
+(https://github.com/GlitchEnzo/NuGetForUnity)
+
+How to use it
+1. In the Unity Editor, open the Scene Navigator window from the Tools menu.
+2. You can add a scene move button in two ways. 
+  - Add Current Scene : Adds the currently open Scene with a button.
+  - Add Select Scene : button to add the selected Scene in the project panel. You can add it after selecting duplicate.
+   The buttons are not added in duplicate.
+3. Use the added buttons to easily move the Scene.  If you change the Scene, the previous Scene is saved automatically.
+4. You can delete unused Scenes. 
+*/
+
 #if UNITY_EDITOR
 
 using UnityEngine;
@@ -30,17 +50,14 @@ public class SceneDataList
 
 public class SceneNavigator : EditorWindow
 {
-    //저장되는 json 파일 이름
+    //Name of the json file to be saved
     private string SceneNameDataFile = "SceneName.json";
 
-    //json 파일로 저장되는 데이터
+    //Data stored as a json file
     private SceneDataList mSceneDataList;
 
-    //현재 스크립트 경로
+    //Current Script Path
     private string mThisScriptsPath;
-
-    //현재 스크립트에서 사용할 하위 오브젝트를 관리하는 같은 이름의 폴더 경로
-    private string mThisScriptsFolderPath;
     private Vector2 scrollPosition = Vector2.zero;
     private Texture2D mLogoTexture;
     private Texture2D mCancelTexture;
@@ -57,20 +74,17 @@ public class SceneNavigator : EditorWindow
     private void OnEnable()
     {
         mSceneDataList = new SceneDataList();
-        //현재 스크립트가 있는 경로
+        //Path with current script
         mThisScriptsPath = Path.GetDirectoryName(AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(this)));
-        //현재 스크립트의 하위 폴더 경로
-        mThisScriptsFolderPath = Path.Combine(mThisScriptsPath, GetType().Name);
-        //json 파일 찾기
-        string jsonFilePath = Path.Combine(mThisScriptsFolderPath, SceneNameDataFile);
+        //Find json file
+        string jsonFilePath = Path.Combine(mThisScriptsPath, SceneNameDataFile);
 
-        //이미지 파일 불러오기
-        string logoPath = $"{mThisScriptsFolderPath}/Images/Logo.psd";
-        string cancelPath = $"{mThisScriptsFolderPath}/Images/Cancel.png";
+        string logoPath = $"{mThisScriptsPath}/Images/Logo.psd";
+        string cancelPath = $"{mThisScriptsPath}/Images/Cancel.png";
         mLogoTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(logoPath);
         mCancelTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(cancelPath);
 
-        //저장된 json파일이 있다면 그 파일에서 정보 불러오고 없다면 새로운 json파일 저장하기
+        //Recall information from a saved json file if it exists and save a new json file if not
         if (File.Exists(jsonFilePath))
         {
             Debug.Log("Save file exists!");
@@ -91,7 +105,6 @@ public class SceneNavigator : EditorWindow
 
         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
 
-        //로고 추가하기
         if (mLogoTexture != null)
         {
             GUILayout.Space(20);
@@ -111,7 +124,7 @@ public class SceneNavigator : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.Label("by Pencils");
         GUILayout.FlexibleSpace(); 
-        GUILayout.Label("Ver 0.0.2");
+        GUILayout.Label("Ver 0.0.3");
         GUILayout.EndHorizontal();
         GUILayout.Space(20);
 
@@ -154,33 +167,21 @@ public class SceneNavigator : EditorWindow
         GUILayout.EndScrollView();
     }
 
-    //현재 스크립트가 있는 위치에 폴더 생성 후 json파일로 SceneName 관리
+    //Create a folder where the current script is located and manage SceneName with a json file
     private void SaveJsonData()
     {
-        if (!Directory.Exists(mThisScriptsFolderPath))
-        {
-            Directory.CreateDirectory(mThisScriptsFolderPath);
-            Debug.Log($"<color=green>Create {GetType().Name}Folder</color>");
-        }
-        else
-        {
-            Debug.Log($"<color=green>{GetType().Name} Folder already created!</color>");
-        }
-
-        File.WriteAllText(Path.Combine(mThisScriptsFolderPath, SceneNameDataFile), JsonConvert.SerializeObject(mSceneDataList));
+        File.WriteAllText(Path.Combine(mThisScriptsPath, SceneNameDataFile), JsonConvert.SerializeObject(mSceneDataList));
     }
 
-    //json파일에서 저장된 SceneName 불러오기
+    //Importing saved SceneName from json file
     private void LoadJsonData()
     {
-        mThisScriptsFolderPath = Path.Combine(Path.GetDirectoryName(AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(this))), GetType().Name);
-
-        string str = File.ReadAllText(Path.Combine(mThisScriptsFolderPath, SceneNameDataFile));
+        string str = File.ReadAllText(Path.Combine(mThisScriptsPath, SceneNameDataFile));
         mSceneDataList = JsonConvert.DeserializeObject<SceneDataList>(str);
     }
 
 
-    //버튼 클릭 시 버튼에 현재 씬 이름 추가
+    //Add the current scene name to the button when you click the button
     private void AddCurrentSceneButton()
     {
         LoadJsonData();
@@ -201,7 +202,7 @@ public class SceneNavigator : EditorWindow
                 currentSceneData.SceneName = currentScene.name;
                 currentSceneData.SceneNamePath = SearchScene(currentScene.name);
 
-                //Scene 경로가 있을 때만 현재 데이터를 추가
+                //Add current data only when Scene path exists
                 if (currentSceneData.SceneNamePath != null)
                     mSceneDataList.SceneNameDataList.Add(currentSceneData);
             }
@@ -212,11 +213,10 @@ public class SceneNavigator : EditorWindow
             currentSceneData.SceneName = currentScene.name;
             currentSceneData.SceneNamePath = SearchScene(currentScene.name);
 
-            //Scene 경로가 있을 때만 현재 데이터를 추가
+            //Add current data only when Scene path exists
             if (currentSceneData.SceneNamePath != null)
                 mSceneDataList.SceneNameDataList.Add(currentSceneData);
         }
-
         SaveJsonData();
     }
 
@@ -224,23 +224,26 @@ public class SceneNavigator : EditorWindow
     {
         LoadJsonData();
 
-        //프로젝트 패널에서 선택하고 있는 씬 관리
+        //Manage the scene you are selecting in the project panel
         UnityEngine.Object[] selectedScene = Selection.objects;
-        Debug.Log($"<color=green>Selected Scene : {selectedScene}</color>");
+        for(int i = 0; i < selectedScene.Length; ++i)
+        {
+        Debug.Log($"<color=green>Selected Scene : {selectedScene[i]}</color>");
+        }
 
-        //비교를 위해 씬의 이름을 저장하는 딕셔너리 추가
+        //Add a dictionary that saves the name of the scene for comparison
         Dictionary<string, object> sceneCompareList = new Dictionary<string, object>();
 
-        //선택한 씬이름을 딕셔너리에 저장
+        //Save the selected scene name to the dictionary
         foreach (SceneAsset scene in selectedScene)
             sceneCompareList.Add(scene.name, null);
 
-        // 원래 있었던 리스트 개수만큼 X 선택한 씬의 개수만큼 반복 비교
+        // Repeat comparison by the number of scenes selected * as many times as the number of scenes that were originally present
         for (int i = 0; i < mSceneDataList.SceneNameDataList.Count; ++i)
         {
             for (int j = 0; j < selectedScene.Length; ++j)
             {
-                if (mSceneDataList.SceneNameDataList[i].SceneName.Equals(selectedScene[j]) && selectedScene[j].GetType() == typeof(SceneAsset))
+                if (mSceneDataList.SceneNameDataList[i].SceneName == selectedScene[j].name && selectedScene[j].GetType() == typeof(SceneAsset))
                 {
                     sceneCompareList.Remove(mSceneDataList.SceneNameDataList[i].SceneName);
                     Debug.Log($"<color=green>{mSceneDataList.SceneNameDataList[i].SceneName} Scene is already saved!</color>");
@@ -261,7 +264,7 @@ public class SceneNavigator : EditorWindow
         SaveJsonData();
     }
 
-    //Scene data 삭제
+    //Delete Scene data
     private void DeleteButton(int id)
     {
         mSceneDataList.SceneNameDataList.RemoveAt(id);
@@ -269,7 +272,7 @@ public class SceneNavigator : EditorWindow
         SaveJsonData();
     }
 
-    //SceneList의 Index 기반으로 해당 Scene 열기
+    //Open corresponding Scene based on Index in SceneList
     private void OpenScene(int index)
     {
         if (EditorSceneManager.GetActiveScene().name == mSceneDataList.SceneNameDataList[index].SceneName)
@@ -278,10 +281,10 @@ public class SceneNavigator : EditorWindow
         }
         else
         {
-            //현재 씬 저장하기
+            //Save Current Scene
             SaveCurrentScene();
 
-            //해당 위치에 Scene파일이 있다면 열고 없으면 디버그 출력 후 버튼 삭제
+            //Open if Scene file is in that location and delete button after debug output if not
             if (File.Exists(mSceneDataList.SceneNameDataList[index].SceneNamePath))
             {
                 EditorSceneManager.OpenScene(mSceneDataList.SceneNameDataList[index].SceneNamePath);
@@ -296,7 +299,7 @@ public class SceneNavigator : EditorWindow
         SaveJsonData();
     }
 
-    //string 기반으로 Assets 폴더에서 해당 이름을 가진 Scene의 경로 반환
+    //Returns the path of the Scene with its name in the Assets folder based on string
     private string SearchScene(string sceneName)
     {
         string[] scenePathArr = Directory.GetFiles("Assets", sceneName + ".unity", SearchOption.AllDirectories);
@@ -313,7 +316,7 @@ public class SceneNavigator : EditorWindow
         }
     }
 
-    //현재 Scene의 정보 저장
+    //Save information from the current Scene
     private void SaveCurrentScene()
     {
         Debug.Log($"<color=green>Saved Current Scene! : {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}</color>");
