@@ -19,9 +19,11 @@ You can download it from the **Nugget Package Manager** in **visual studio** or 
 
 ##
 - Select **Tools/Pencils/SceneNavigator**
+  
 ![image](https://github.com/pencils57/Unity-SceneNavigator/assets/121782770/9195b3a5-0af7-4f00-ad52-90589beaedd3)
 
 - Click the two buttons to create a button that changes the Scene.
+  
 ![image](https://github.com/pencils57/Unity-SceneNavigator/assets/121782770/50897ce1-f9f7-4e77-afd4-cb00fa653fa9)
 - **Add Current Scene :** Button to add currently open Scene  
 - **Add Select Scene :** Button to add the selected Scene in the project panel  
