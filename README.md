@@ -2,8 +2,8 @@
 This tool provides easy mobility by registering Scenes that Unity frequently uses.
 
 ### Requirements 
-**newtonsoft.json** must be added to the project before it can be used.  
-You can download it from the **Nugget Package Manager** in **visual studio** or from the project. (https://github.com/GlitchEnzo/NuGetForUnity)
+**newtonsoft.json** must be added to the project before it can be use this Tool.  
+You can download it from the **Nugget Package Manager** in **visual studio** or from this project. (https://github.com/GlitchEnzo/NuGetForUnity)
 
 ![ezgif com-video-to-gif (1)](https://github.com/pencils57/Unity-SceneNavigator/assets/121782770/ed3fce4b-28dc-4106-8076-d10e0249d912)
 
