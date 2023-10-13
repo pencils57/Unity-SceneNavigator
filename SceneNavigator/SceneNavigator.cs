@@ -124,7 +124,7 @@ public class SceneNavigator : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.Label("by Pencils");
         GUILayout.FlexibleSpace(); 
-        GUILayout.Label("Ver 0.0.3");
+        GUILayout.Label("Ver 0.0.4");
         GUILayout.EndHorizontal();
         GUILayout.Space(20);
 
@@ -190,14 +190,18 @@ public class SceneNavigator : EditorWindow
 
         if (mSceneDataList.SceneNameDataList.Count > 0)
         {
+            bool isNoScene = true;
             for (int i = 0; i < mSceneDataList.SceneNameDataList.Count; ++i)
             {
                 if (mSceneDataList.SceneNameDataList[i].SceneName.Contains(currentScene.name))
                 {
                     Debug.Log("<color=green>Scene currently added!</color>");
-                    return;
+                    isNoScene = false;
                 }
+            }
 
+            if(isNoScene)
+            {
                 SceneData currentSceneData = new SceneData();
                 currentSceneData.SceneName = currentScene.name;
                 currentSceneData.SceneNamePath = SearchScene(currentScene.name);
@@ -205,6 +209,7 @@ public class SceneNavigator : EditorWindow
                 //Add current data only when Scene path exists
                 if (currentSceneData.SceneNamePath != null)
                     mSceneDataList.SceneNameDataList.Add(currentSceneData);
+
             }
         }
         else
