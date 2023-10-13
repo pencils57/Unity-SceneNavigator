@@ -10,8 +10,8 @@ You can download it from the **Nugget Package Manager** in **visual studio** or 
 ### How to Use
 1. In the Unity Editor, open the Scene Navigator window from the Tools menu.  
 2. You can add a scene move button in two ways.  
-- **Add Current Scene** : Adds the currently open Scene with a button.  
-- **Add Select Scene** : button to add the selected Scene in the project panel. You can add it after selecting duplicate.  
+- **Add Current Scene** : Button to add the currently open Scene.
+- **Add Select Scene** : Button to add the selected Scene in the project panel. You can add it after selecting duplicate.  
 
 	The buttons are not added in duplicate.  
 3. Use the added buttons to easily move the Scene. If you change the Scene, the previous Scene is saved automatically.  
