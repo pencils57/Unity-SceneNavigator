@@ -64,11 +64,9 @@ public class SceneNavigator : EditorWindow
     private GUIStyle customButtonStyle;
 
     [MenuItem("Tools/Pencils/SceneNavigator")]
-    private static void OpenWindow()
+    public static void ShowWindow()
     {
-        SceneNavigator window = GetWindow<SceneNavigator>();
-        window.titleContent = new GUIContent("SceneNavigator");
-        window.Show();
+        GetWindow<ItemNavigator>("SceneNavigator");
     }
 
     private void OnEnable()
